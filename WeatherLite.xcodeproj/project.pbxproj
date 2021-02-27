@@ -9,12 +9,15 @@
 /* Begin PBXBuildFile section */
 		D6274DC425EA809D00B09220 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6274DC325EA809D00B09220 /* AppDelegate.swift */; };
 		D6274DC625EA809D00B09220 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6274DC525EA809D00B09220 /* SceneDelegate.swift */; };
-		D6274DC825EA809D00B09220 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6274DC725EA809D00B09220 /* ViewController.swift */; };
+		D6274DC825EA809D00B09220 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6274DC725EA809D00B09220 /* MainTabBarController.swift */; };
 		D6274DCB25EA809D00B09220 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6274DC925EA809D00B09220 /* Main.storyboard */; };
 		D6274DCD25EA809F00B09220 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6274DCC25EA809F00B09220 /* Assets.xcassets */; };
 		D6274DD025EA809F00B09220 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6274DCE25EA809F00B09220 /* LaunchScreen.storyboard */; };
 		D6274DDB25EA80A000B09220 /* WeatherLiteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6274DDA25EA80A000B09220 /* WeatherLiteTests.swift */; };
 		D6274DE625EA80A000B09220 /* WeatherLiteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6274DE525EA80A000B09220 /* WeatherLiteUITests.swift */; };
+		D6E23E7225EAA2B100E94C69 /* DayForecastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E7125EAA2B100E94C69 /* DayForecastViewController.swift */; };
+		D6E23E7A25EAA2C000E94C69 /* HourlyForecastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E7925EAA2C000E94C69 /* HourlyForecastViewController.swift */; };
+		D6E23E8025EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E7F25EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +41,7 @@
 		D6274DC025EA809D00B09220 /* WeatherLite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherLite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6274DC325EA809D00B09220 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D6274DC525EA809D00B09220 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		D6274DC725EA809D00B09220 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D6274DC725EA809D00B09220 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		D6274DCA25EA809D00B09220 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D6274DCC25EA809F00B09220 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D6274DCF25EA809F00B09220 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -49,6 +52,9 @@
 		D6274DE125EA80A000B09220 /* WeatherLiteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherLiteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6274DE525EA80A000B09220 /* WeatherLiteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherLiteUITests.swift; sourceTree = "<group>"; };
 		D6274DE725EA80A000B09220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D6E23E7125EAA2B100E94C69 /* DayForecastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayForecastViewController.swift; sourceTree = "<group>"; };
+		D6E23E7925EAA2C000E94C69 /* HourlyForecastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyForecastViewController.swift; sourceTree = "<group>"; };
+		D6E23E7F25EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITabBarController+CreateNavigationController.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,9 +105,10 @@
 		D6274DC225EA809D00B09220 /* WeatherLite */ = {
 			isa = PBXGroup;
 			children = (
+				D6E23E7E25EAA2F800E94C69 /* Extensions */,
+				D6E23E7025EAA29100E94C69 /* Views */,
 				D6274DC325EA809D00B09220 /* AppDelegate.swift */,
 				D6274DC525EA809D00B09220 /* SceneDelegate.swift */,
-				D6274DC725EA809D00B09220 /* ViewController.swift */,
 				D6274DC925EA809D00B09220 /* Main.storyboard */,
 				D6274DCC25EA809F00B09220 /* Assets.xcassets */,
 				D6274DCE25EA809F00B09220 /* LaunchScreen.storyboard */,
@@ -126,6 +133,24 @@
 				D6274DE725EA80A000B09220 /* Info.plist */,
 			);
 			path = WeatherLiteUITests;
+			sourceTree = "<group>";
+		};
+		D6E23E7025EAA29100E94C69 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D6274DC725EA809D00B09220 /* MainTabBarController.swift */,
+				D6E23E7125EAA2B100E94C69 /* DayForecastViewController.swift */,
+				D6E23E7925EAA2C000E94C69 /* HourlyForecastViewController.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D6E23E7E25EAA2F800E94C69 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D6E23E7F25EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,9 +283,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6274DC825EA809D00B09220 /* ViewController.swift in Sources */,
+				D6274DC825EA809D00B09220 /* MainTabBarController.swift in Sources */,
 				D6274DC425EA809D00B09220 /* AppDelegate.swift in Sources */,
+				D6E23E7225EAA2B100E94C69 /* DayForecastViewController.swift in Sources */,
+				D6E23E8025EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift in Sources */,
 				D6274DC625EA809D00B09220 /* SceneDelegate.swift in Sources */,
+				D6E23E7A25EAA2C000E94C69 /* HourlyForecastViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,7 +474,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ausianovich.WeatherLite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -465,7 +493,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ausianovich.WeatherLite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
