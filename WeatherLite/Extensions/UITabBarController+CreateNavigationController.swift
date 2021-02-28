@@ -8,11 +8,12 @@
 import UIKit
 
 extension UITabBarController {
-    func createNavigationController(with viewController: UIViewController, selected: UIImage?, unselected: UIImage?) -> UINavigationController {
+    func createNavigationController(with viewController: UIViewController, title: String, selected: UIImage?, unselected: UIImage?) -> UINavigationController {
         let viewController = viewController
         let navigationViewController = UINavigationController(rootViewController: viewController)
         navigationViewController.tabBarItem.image = unselected
         navigationViewController.tabBarItem.selectedImage = selected
+        navigationViewController.title = title
         return navigationViewController
     }
 }
