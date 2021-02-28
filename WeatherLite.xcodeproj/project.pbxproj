@@ -18,6 +18,9 @@
 		D6E23E7225EAA2B100E94C69 /* DayForecastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E7125EAA2B100E94C69 /* DayForecastViewController.swift */; };
 		D6E23E7A25EAA2C000E94C69 /* HourlyForecastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E7925EAA2C000E94C69 /* HourlyForecastViewController.swift */; };
 		D6E23E8025EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E7F25EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift */; };
+		D6E23E8925EAC11F00E94C69 /* HourlyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E8825EAC11F00E94C69 /* HourlyTableViewCell.swift */; };
+		D6E23E9125EAC48700E94C69 /* UIVIew+AddSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E9025EAC48700E94C69 /* UIVIew+AddSubviews.swift */; };
+		D6E23E9625EAD07700E94C69 /* SectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E23E9525EAD07700E94C69 /* SectionTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +58,9 @@
 		D6E23E7125EAA2B100E94C69 /* DayForecastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayForecastViewController.swift; sourceTree = "<group>"; };
 		D6E23E7925EAA2C000E94C69 /* HourlyForecastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyForecastViewController.swift; sourceTree = "<group>"; };
 		D6E23E7F25EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITabBarController+CreateNavigationController.swift"; sourceTree = "<group>"; };
+		D6E23E8825EAC11F00E94C69 /* HourlyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyTableViewCell.swift; sourceTree = "<group>"; };
+		D6E23E9025EAC48700E94C69 /* UIVIew+AddSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIVIew+AddSubviews.swift"; sourceTree = "<group>"; };
+		D6E23E9525EAD07700E94C69 /* SectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +144,7 @@
 		D6E23E7025EAA29100E94C69 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D6E23E8725EAC0E500E94C69 /* HourlyTableViewCells */,
 				D6274DC725EA809D00B09220 /* MainTabBarController.swift */,
 				D6E23E7125EAA2B100E94C69 /* DayForecastViewController.swift */,
 				D6E23E7925EAA2C000E94C69 /* HourlyForecastViewController.swift */,
@@ -149,8 +156,18 @@
 			isa = PBXGroup;
 			children = (
 				D6E23E7F25EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift */,
+				D6E23E9025EAC48700E94C69 /* UIVIew+AddSubviews.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D6E23E8725EAC0E500E94C69 /* HourlyTableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				D6E23E8825EAC11F00E94C69 /* HourlyTableViewCell.swift */,
+				D6E23E9525EAD07700E94C69 /* SectionTableViewCell.swift */,
+			);
+			path = HourlyTableViewCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,11 +300,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6E23E9125EAC48700E94C69 /* UIVIew+AddSubviews.swift in Sources */,
 				D6274DC825EA809D00B09220 /* MainTabBarController.swift in Sources */,
 				D6274DC425EA809D00B09220 /* AppDelegate.swift in Sources */,
 				D6E23E7225EAA2B100E94C69 /* DayForecastViewController.swift in Sources */,
 				D6E23E8025EAA32300E94C69 /* UITabBarController+CreateNavigationController.swift in Sources */,
 				D6274DC625EA809D00B09220 /* SceneDelegate.swift in Sources */,
+				D6E23E9625EAD07700E94C69 /* SectionTableViewCell.swift in Sources */,
+				D6E23E8925EAC11F00E94C69 /* HourlyTableViewCell.swift in Sources */,
 				D6E23E7A25EAA2C000E94C69 /* HourlyForecastViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
