@@ -16,11 +16,15 @@ class MainTabBarController: UITabBarController {
     
     func setupTabBar() {
         let dayForecastViewController = self.createNavigationController(with: DayForecastViewController(),
+                                                                        title: "Today",
                                                                         selected: UIImage(systemName: "sun.min"),
                                                                         unselected: UIImage(systemName: "sun.min.fill"))
         let hourlyForecastViewController = self.createNavigationController(with: HourlyForecastViewController(),
+                                                                           title: "Forecast",
                                                                            selected: UIImage(systemName: "cloud.fog"),
                                                                            unselected: UIImage(systemName: "cloud.fog.fill"))
+        dayForecastViewController.navigationController?.title = "Today"
+        hourlyForecastViewController.navigationController?.title = "Forecast"
         self.viewControllers = [dayForecastViewController, hourlyForecastViewController]
     }
 }
