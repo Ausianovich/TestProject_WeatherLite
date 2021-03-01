@@ -7,19 +7,61 @@
 
 import UIKit
 
-class DayForecastViewController: UIViewController {
+class DayForecastViewController: UIViewController, DayForecastViewDelegate {
     var cityName: String = "NewCity"
+    
+    var presenter: WeatherPresenterProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.setSubviews()
         self.activateConstraints()
+        
+        let presenter = WeatherPresenter(delegate: self)
+        self.set(presenter: presenter)
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.updateData))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.updateData()
+    }
+    
+    func set(presenter: WeatherPresenterProtocol) {
+        self.presenter = presenter
     }
     
     func setCity(name: String) {
         self.cityName = name
         self.navigationItem.title = self.cityName
+    }
+    
+    @objc func updateData() {
+        self.presenter?.fetchData()
+    }
+    
+    func show(_ error: Error) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(okAction)
+            self.present(alert, animated: true)
+        }
+    }
+    
+    func updateDayForecastViewController(with model: DayWeatherDTO) {
+            self.setCity(name: model.location ?? "")
+            self.weatherImage.image = UIImage(named: model.weatherCondition ?? "")
+            self.locationLabel.text = model.location
+            self.weatherDataLabel.text = (model.temperature ?? "") + "°"
+            self.humidityLabel.text = model.humidity
+            self.rainLabel.text = model.rain
+            self.pressureLabel.text = model.pressure
+            self.windSpeedLabel.text = model.windSpeed
+            self.windDirectionLabel.text = model.windDerection
     }
     
     private func setSubviews() {
