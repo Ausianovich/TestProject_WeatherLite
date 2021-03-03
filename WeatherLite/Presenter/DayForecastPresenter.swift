@@ -83,16 +83,29 @@ class WeatherPresenter: WeatherPresenterProtocol {
             let weather = try self.jsonDecoder.decode(WordDetailResponseModel.self, from: data)
             guard let currentWeather = weather.current else {return}
             self.getLocationName(with: weather.lat ?? 0 , and: weather.lon ?? 0) { (locationName) in
+                guard let temperature = currentWeather.temp,
+                      let pressure = currentWeather.pressure?.description,
+                      let humidity = currentWeather.humidity?.description,
+                      let windSpeed = currentWeather.windSpeed?.description,
+                      let windDerection = currentWeather.windDeg?.description,
+                      let weather = currentWeather.weather,
+                      !weather.isEmpty,
+                      let weatherCondition = weather[0].icon else {return}
+                      
+                
+                
+                
+                
                 let dayWeatherDTO = DayWeatherDTO(
                     location: locationName,
                     timeCode: nil,
-                    temperature: currentWeather.temp?.description,
-                    pressure: currentWeather.pressure?.description,
-                    humidity: currentWeather.humidity?.description,
-                    windSpeed: currentWeather.windSpeed?.description,
-                    windDerection: currentWeather.windDeg?.description,
-                    weatherCondition: currentWeather.weather?[0].icon,
-                    rain: currentWeather.rain?.the1H?.description)
+                    temperature: Int(temperature).description,
+                    pressure: pressure + ", hPa",
+                    humidity: humidity + ", %",
+                    windSpeed: windSpeed + " metre/sec",
+                    windDerection: windDerection,
+                    weatherCondition: weatherCondition,
+                    rain: (currentWeather.rain?.the1H?.description ?? "0") + " mm")
                 
                 self.delegate?.updateDayForecastViewController(with: dayWeatherDTO)
             }

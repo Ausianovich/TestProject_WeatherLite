@@ -8,6 +8,6 @@
 import Foundation
 
 protocol HourlyWeatherPresenterProtocol {
-    var delegate: DayForecastViewDelegate? {get set}
+    var delegate: HourlyForecastViewDelegate? {get set}
     func fetchData()
 }
