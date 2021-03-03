@@ -7,38 +7,11 @@
 
 import UIKit
 
-struct Section {
-    var title: String
-    var data: [HourlyTableViewCellModel]
-}
-
-
-class HourlyForecastViewController: UIViewController {
+final class HourlyForecastViewController: UIViewController {
     
-    let testData: [Section] = [
-        Section(title: "Moday",
-                data: [
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "11.0"),
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "12.0"),
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "13.0")]),
-                               
-        Section(title: "Tuesday",
-                data: [
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "21.0"),
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "22.0"),
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "23.0")]),
-        Section(title: "Wensday",
-                data: [
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "21.0"),
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "22.0"),
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "23.0")]),
-                        
-        Section(title: "Thursday",
-                data: [
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "21.0"),
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "22.0"),
-                    HourlyTableViewCellModel(image: UIImage(systemName: "sun.max"), timeCode: "12-00", weatherCondition: "Well", temperature: "23.0")])
-    ]
+    private var cityName: String = ""
+    private var testData: [HourlyTableViewSectionCellModel] = []
+    private var presenter: HourlyWeatherPresenterProtocol?
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -49,26 +22,38 @@ class HourlyForecastViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.setupNavigationItemTitle()
         self.setTableViewDataSource()
+        self.setupNavigation(itemTitle: "loading...")
         self.removeEmptyTableViewCells()
-        
-        self.tableView.register(SectionTableViewCell.self, forCellReuseIdentifier: "sectionCell")
-        self.tableView.register(HourlyTableViewCell.self, forCellReuseIdentifier: "weatherCell")
-        
+        self.registerCellsInTableView()
         self.setupSubviews()
+        
+        let presenter = HourlyForecastPresenter(delegate: self)
+        self.set(presenter: presenter)
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.updateData))
     }
     
-    private func setupNavigationItemTitle() {
-        self.navigationItem.title = "My city"
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.updateData()
     }
     
     private func setTableViewDataSource () {
         self.tableView.dataSource = self
     }
     
+    private func setupNavigation(itemTitle: String) {
+        self.navigationItem.title = itemTitle
+    }
+    
     private func removeEmptyTableViewCells() {
         self.tableView.tableFooterView = UIView()
+    }
+    
+    private func registerCellsInTableView() {
+        self.tableView.register(SectionTableViewCell.self, forCellReuseIdentifier: String(describing: SectionTableViewCell.self))
+        self.tableView.register(HourlyTableViewCell.self, forCellReuseIdentifier: String(describing: HourlyTableViewCell.self))
     }
     
     private func setupSubviews() {
@@ -81,6 +66,42 @@ class HourlyForecastViewController: UIViewController {
         ])
     }
     
+    func set(presenter: HourlyWeatherPresenterProtocol) {
+        self.presenter = presenter
+    }
+    
+    @objc func updateData() {
+        self.presenter?.fetchData()
+    }
+}
+
+extension HourlyForecastViewController: HourlyForecastViewDelegate {
+    func updateHourlyForecastViewController(with model: HourlyWeatherDTO) {
+        self.setupNavigation(itemTitle: model.locationName)
+        let hourlyData = model.hourlyData
+        
+        let sections = hourlyData.map { section -> HourlyTableViewSectionCellModel in
+            let hourlyData = section.hourlyData.map { cellModel in
+                    HourlyTableViewCellModel(image: UIImage(named: cellModel.weatherCondition ?? ""),
+                                             timeCode: cellModel.timeCode ?? "",
+                                             weatherCondition: cellModel.weatherDescription?.capitalized ?? "",
+                                             temperature: (cellModel.temperature ?? "") + "°")
+            }
+            return HourlyTableViewSectionCellModel(title: section.dayOfWeek, data: hourlyData)
+        }
+        
+        self.testData = sections
+        self.tableView.reloadData()
+    }
+    
+    func show(_ error: Error) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(okAction)
+            self.present(alert, animated: true)
+        }
+    }
 }
 
 extension HourlyForecastViewController: UITableViewDataSource {
@@ -94,11 +115,11 @@ extension HourlyForecastViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            guard let section = tableView.dequeueReusableCell(withIdentifier: "sectionCell") as? SectionTableViewCell else {return UITableViewCell()}
+            guard let section = tableView.dequeueReusableCell(withIdentifier: String(describing: SectionTableViewCell.self)) as? SectionTableViewCell else {return UITableViewCell()}
             section.configure(with: self.testData[indexPath.section].title)
             return section
         } else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell") as? HourlyTableViewCell else {return UITableViewCell()}
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: HourlyTableViewCell.self)) as? HourlyTableViewCell else {return UITableViewCell()}
             let weatherModel = self.testData[indexPath.section].data[indexPath.row - 1]
             cell.configure(with: weatherModel)
             return cell

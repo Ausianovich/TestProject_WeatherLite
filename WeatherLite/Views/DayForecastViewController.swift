@@ -7,10 +7,10 @@
 
 import UIKit
 
-class DayForecastViewController: UIViewController, DayForecastViewDelegate {
-    var cityName: String = "NewCity"
+final class DayForecastViewController: UIViewController, DayForecastViewDelegate {
+    private var cityName: String = ""
     
-    var presenter: WeatherPresenterProtocol?
+    private var presenter: WeatherPresenterProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +61,7 @@ class DayForecastViewController: UIViewController, DayForecastViewDelegate {
             self.rainLabel.text = model.rain
             self.pressureLabel.text = model.pressure
             self.windSpeedLabel.text = model.windSpeed
-            self.windDirectionLabel.text = model.windDerection
+            self.windDirectionLabel.text = model.windDirectionString
     }
     
     private func setSubviews() {
@@ -237,6 +237,7 @@ class DayForecastViewController: UIViewController, DayForecastViewDelegate {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Share", for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(shareButtonPressed), for: .touchUpInside)
         return button
     }()
@@ -244,6 +245,12 @@ class DayForecastViewController: UIViewController, DayForecastViewDelegate {
     @objc
     func shareButtonPressed(sender: UIButton!) {
         print("Button is pressed")
+        
+        let text = "Today is \(self.weatherDataLabel.text ?? "")"
+        
+        let textToShare = [text]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
     //AdditionalWeatherInformerView Container Level

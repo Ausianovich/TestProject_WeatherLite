@@ -12,7 +12,7 @@ class SectionTableViewCell: UITableViewCell {
     
     lazy var sectionTitle: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 25)
+        label.font = UIFont.systemFont(ofSize: 25)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -37,7 +37,7 @@ class SectionTableViewCell: UITableViewCell {
     func activateConstraints(){
         NSLayoutConstraint.activate([
             self.sectionTitle.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5),
-            self.sectionTitle.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 5),
+            self.sectionTitle.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20),
             self.sectionTitle.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -5),
             self.sectionTitle.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
         ])

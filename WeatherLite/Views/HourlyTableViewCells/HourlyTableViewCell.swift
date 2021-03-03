@@ -7,13 +7,6 @@
 
 import UIKit
 
-struct HourlyTableViewCellModel {
-    let image: UIImage?
-    let timeCode: String
-    let weatherCondition: String
-    let temperature: String
-}
-
 class HourlyTableViewCell: UITableViewCell {
     //MARK: - Properties
     
@@ -45,7 +38,7 @@ class HourlyTableViewCell: UITableViewCell {
     
     lazy var weatherCondition: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIFont.systemFont(ofSize: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -100,7 +93,7 @@ class HourlyTableViewCell: UITableViewCell {
             
             self.temperature.topAnchor.constraint(equalTo: self.mainContainerView.topAnchor, constant: 5),
             self.temperature.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor, constant: -5),
-            self.temperature.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor, constant: -10)
+            self.temperature.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor, constant: -30)
         ])
     }
     
