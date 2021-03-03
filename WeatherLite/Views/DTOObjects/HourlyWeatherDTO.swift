@@ -8,5 +8,6 @@
 import Foundation
 
 struct HourlyWeatherDTO {
-    var hourlyData: [DayWeatherDTO] = []
+    var hourlyData: [DaySectionsDTO] = []
+    var locationName: String
 }
