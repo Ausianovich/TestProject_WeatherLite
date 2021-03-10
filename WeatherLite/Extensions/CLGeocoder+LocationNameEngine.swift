@@ -8,9 +8,12 @@
 import Foundation
 import CoreLocation
 
-extension CLGeocoder: LocationNameEngine {
+extension CLGeocoder: LocationEngine {
     typealias Handler = ([CLPlacemark]?, Error?) -> Void
-    func fetchLocationName(with location: CLLocation, completionHandler: @escaping Handler) {
+    func fetchName(with location: CLLocation, completionHandler: @escaping Handler) {
         self.reverseGeocodeLocation(location, completionHandler: completionHandler)
+    }
+    func fetchLocation(with city: String, completionHandler: @escaping Handler) {
+        self.geocodeAddressString(city, completionHandler: completionHandler)
     }
 }
