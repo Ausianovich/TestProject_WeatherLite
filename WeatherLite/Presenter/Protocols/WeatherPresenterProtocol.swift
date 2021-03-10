@@ -9,5 +9,6 @@ import Foundation
 
 protocol WeatherPresenterProtocol {
     var delegate: DayForecastViewDelegate? {get set}
-    func fetchData()
+    func fetchCurrentPositionWeather()
+    func fetchWeather(with cityName: String)
 }

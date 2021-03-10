@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainTabBarController: UITabBarController {
+final class MainTabBarController: UITabBarController, UISearchBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,16 +15,23 @@ class MainTabBarController: UITabBarController {
     }
     
     func setupTabBar() {
-        let dayForecastViewController = self.createNavigationController(with: DayForecastViewController(),
+        let dayForecastViewController = DayForecastViewController()
+        let hourlyForecastViewController = HourlyForecastViewController()
+        dayForecastViewController.hourlyForecastController = hourlyForecastViewController
+
+        
+        
+        let dayForecastNavigationController = self.createNavigationController(with: dayForecastViewController,
                                                                         title: "Today",
                                                                         selected: UIImage(systemName: "sun.min"),
                                                                         unselected: UIImage(systemName: "sun.min.fill"))
-        let hourlyForecastViewController = self.createNavigationController(with: HourlyForecastViewController(),
+        let hourlyForecastNavigationController = self.createNavigationController(with: hourlyForecastViewController,
                                                                            title: "Forecast",
                                                                            selected: UIImage(systemName: "cloud.fog"),
                                                                            unselected: UIImage(systemName: "cloud.fog.fill"))
-        dayForecastViewController.navigationController?.title = "Today"
-        hourlyForecastViewController.navigationController?.title = "Forecast"
-        self.viewControllers = [dayForecastViewController, hourlyForecastViewController]
+        
+        dayForecastNavigationController.navigationController?.title = "Today"
+        hourlyForecastNavigationController.navigationController?.title = "Forecast"
+        self.viewControllers = [dayForecastNavigationController, hourlyForecastNavigationController]
     }
 }

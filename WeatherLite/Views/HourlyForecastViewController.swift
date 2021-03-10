@@ -9,6 +9,7 @@ import UIKit
 
 final class HourlyForecastViewController: UIViewController {
     
+    //MARK: - Properties
     private var cityName: String = ""
     private var testData: [HourlyTableViewSectionCellModel] = []
     private var presenter: HourlyWeatherPresenterProtocol?
@@ -19,6 +20,7 @@ final class HourlyForecastViewController: UIViewController {
         return tableView
     }()
     
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -30,15 +32,10 @@ final class HourlyForecastViewController: UIViewController {
         
         let presenter = HourlyForecastPresenter(delegate: self)
         self.set(presenter: presenter)
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.updateData))
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         self.updateData()
     }
     
+    //MARK: - Helpers
     private func setTableViewDataSource () {
         self.tableView.dataSource = self
     }
@@ -70,11 +67,16 @@ final class HourlyForecastViewController: UIViewController {
         self.presenter = presenter
     }
     
-    @objc func updateData() {
-        self.presenter?.fetchData()
+    func updateData() {
+        self.presenter?.fetchCurrentPositionWeather()
+    }
+    
+    func updayteData(with cityName: String) {
+        self.presenter?.fetchWeather(with: cityName)
     }
 }
 
+//MARK: - Extention: HourlyForecastViewDelegate
 extension HourlyForecastViewController: HourlyForecastViewDelegate {
     func updateHourlyForecastViewController(with model: HourlyWeatherDTO) {
         self.setupNavigation(itemTitle: model.locationName)
@@ -104,6 +106,7 @@ extension HourlyForecastViewController: HourlyForecastViewDelegate {
     }
 }
 
+//MARK: - Extension: UITableViewDataSource
 extension HourlyForecastViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.testData.count

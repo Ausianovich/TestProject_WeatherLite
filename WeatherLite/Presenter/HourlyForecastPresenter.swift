@@ -13,25 +13,34 @@ final class HourlyForecastPresenter: HourlyWeatherPresenterProtocol {
     
     var delegate: HourlyForecastViewDelegate?
     private var currentLocationManager: CurrentLocationProtocol
-    private var locationNameManager: LocationNameManager
+    private var locationManager: LocationManager
     private var dataLoader: DataLoader
     private var jsonDecoder = JSONDecoder()
 
     init(delegate: HourlyForecastViewDelegate,
          currentLocationManager: CurrentLocationProtocol = CurrentLocationManager(),
-         locationNameManager: LocationNameManager = LocationNameManager(),
+         locationNameManager: LocationManager = LocationManager(),
          dataLoader: DataLoader = DataLoader()) {
         self.delegate = delegate
         self.currentLocationManager = currentLocationManager
-        self.locationNameManager = locationNameManager
+        self.locationManager = locationNameManager
         self.dataLoader = dataLoader
     }
     
-    func fetchData() {
+    func fetchCurrentPositionWeather() {
         self.currentLocationManager.completionHandler = { latitude, longitude in
             self.fetchWeather(with: (latitude, longitude))
         }
         self.currentLocationManager.getCurrentLocation()
+    }
+    
+    func fetchWeather(with cityName: String) {
+        self.locationManager.getLocationCoordinate(with: cityName) { (locationResult) in
+            switch locationResult {
+                case .error(let error): self.delegate?.show(error)
+                case .coordinate(let coordinate): self.fetchWeather(with: (coordinate.latitude, coordinate.longitude))
+            }
+        }
     }
     
     private func fetchWeather(with location: Location) {
@@ -63,7 +72,7 @@ final class HourlyForecastPresenter: HourlyWeatherPresenterProtocol {
     
     private func parseJSON(from data: Data) {
         do {
-            let weather = try self.jsonDecoder.decode(WordDetailResponseModel.self, from: data)
+            let weather = try self.jsonDecoder.decode(MainJSONDataModel.self, from: data)
             self.getLocationName(with: weather.lat ?? 0 , and: weather.lon ?? 0) { (locationName) in
                 guard let data = weather.hourly else {return}
                 let dto = data.map { hourlyWeather -> DayWeatherDTO in
@@ -95,7 +104,7 @@ final class HourlyForecastPresenter: HourlyWeatherPresenterProtocol {
     }
     
     private func getLocationName(with latitude: Double, and longitude: Double, completion: @escaping (String) -> Void){
-        self.locationNameManager.getLocationName(with: latitude, and: longitude) { (result) in
+        self.locationManager.getLocationName(with: latitude, and: longitude) { (result) in
             switch result {
                 case .error(let error): self.delegate?.show(error)
                 case .cityName(let name): completion(name)

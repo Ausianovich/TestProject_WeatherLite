@@ -7,11 +7,17 @@
 
 import UIKit
 
-final class DayForecastViewController: UIViewController, DayForecastViewDelegate {
+
+
+final class DayForecastViewController: UIViewController {
+    
+    //MARK: - Main properties
     private var cityName: String = ""
-    
     private var presenter: WeatherPresenterProtocol?
+    var hourlyForecastController: HourlyForecastViewController?
+    private var searchBarIsHidden: Bool = true
     
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -21,15 +27,14 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
         let presenter = WeatherPresenter(delegate: self)
         self.set(presenter: presenter)
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.updateData))
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(self.updateCurrentPositionWeatherData))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(self.showSearchBar))
         
-        self.updateData()
+        self.updateCurrentPositionWeatherData()
     }
     
+    //MARK: - Helpers
+
     func set(presenter: WeatherPresenterProtocol) {
         self.presenter = presenter
     }
@@ -39,30 +44,27 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
         self.navigationItem.title = self.cityName
     }
     
-    @objc func updateData() {
-        self.presenter?.fetchData()
+    @objc
+    func updateCurrentPositionWeatherData() {
+        self.presenter?.fetchCurrentPositionWeather()
     }
     
-    func show(_ error: Error) {
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alert.addAction(okAction)
-            self.present(alert, animated: true)
+    @objc
+    func showSearchBar() {
+        UIView.animate(withDuration: 0.5) {
+            if self.searchBarIsHidden {
+                self.citySearchBar.frame.origin.y += self.citySearchBar.frame.height
+                self.citySearchBar.becomeFirstResponder()
+            } else {
+                self.citySearchBar.frame.origin.y -= self.citySearchBar.frame.height
+                self.citySearchBar.resignFirstResponder()
+            }
+        } completion: { _ in
+            self.searchBarIsHidden.toggle()
         }
     }
-    
-    func updateDayForecastViewController(with model: DayWeatherDTO) {
-            self.setCity(name: model.location ?? "")
-            self.weatherImage.image = UIImage(named: model.weatherCondition ?? "")
-            self.locationLabel.text = model.location
-            self.weatherDataLabel.text = (model.temperature ?? "") + "°"
-            self.humidityLabel.text = model.humidity
-            self.rainLabel.text = model.rain
-            self.pressureLabel.text = model.pressure
-            self.windSpeedLabel.text = model.windSpeed
-            self.windDirectionLabel.text = model.windDirectionString
-    }
+
+    //MARK: - View hierarchy
     
     private func setSubviews() {
         self.view.addSubviews(self.mainContainerView)
@@ -70,7 +72,7 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
         self.mainContainerView.addSubviews(self.mainWeatherInformerView, self.additionalWeatherInformerView, self.buttonContainerView)
         
         
-        self.mainWeatherInformerView.addSubviews(self.weatherImage,self.locationLabel, self.weatherDataLabel)
+        self.mainWeatherInformerView.addSubviews(self.citySearchBar ,self.weatherImage,self.locationLabel, self.weatherDataLabel)
         self.additionalWeatherInformerView.addSubviews(self.firstRowInformerDetailsContainer, self.secondRowInformerDetailsContainer)
         self.buttonContainerView.addSubviews(self.shareButton)
         
@@ -84,6 +86,8 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
         self.windDirectionContainer.addSubviews(self.windDirectionUIImage, self.windDirectionLabel)
         
     }
+    
+    //MARK: - Constraints
     
     private func activateConstraints() {
         
@@ -107,6 +111,10 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
             self.buttonContainerView.leadingAnchor.constraint(equalTo: self.mainContainerView.leadingAnchor),
             self.buttonContainerView.trailingAnchor.constraint(equalTo: self.mainContainerView.trailingAnchor),
             self.buttonContainerView.bottomAnchor.constraint(equalTo: self.mainContainerView.bottomAnchor),
+            
+            self.citySearchBar.topAnchor.constraint(equalTo: self.mainWeatherInformerView.topAnchor),
+            self.citySearchBar.leadingAnchor.constraint(equalTo: self.mainWeatherInformerView.leadingAnchor),
+            self.citySearchBar.trailingAnchor.constraint(equalTo: self.mainWeatherInformerView.trailingAnchor),
 
             self.weatherImage.centerXAnchor.constraint(equalTo: self.mainWeatherInformerView.centerXAnchor),
             self.weatherImage.centerYAnchor.constraint(equalTo: self.mainWeatherInformerView.centerYAnchor),
@@ -183,6 +191,8 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
         ])
     }
     
+    //MARK: - View elements
+    
     //Main level
     lazy var mainContainerView: UIView = {
        let view = UIView()
@@ -210,6 +220,18 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
     }()
     
     // MainWeatherInformedView Details level
+    
+    lazy var citySearchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.searchBarStyle = .prominent
+        searchBar.placeholder = "Search..."
+        searchBar.sizeToFit()
+        searchBar.isTranslucent = false
+        searchBar.delegate = self
+        searchBar.frame.origin.y -= searchBar.frame.height
+        return searchBar
+    }()
+    
     lazy var weatherImage: UIImageView = {
         let image = UIImageView()
         image.contentMode = .scaleAspectFit
@@ -230,7 +252,6 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
         return label
     }()
     
-    
     // ButtonContainerView Details level
     
     lazy var shareButton: UIButton = {
@@ -244,8 +265,6 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
     
     @objc
     func shareButtonPressed(sender: UIButton!) {
-        print("Button is pressed")
-        
         let text = "Today is \(self.weatherDataLabel.text ?? "")"
         
         let textToShare = [text]
@@ -367,6 +386,53 @@ final class DayForecastViewController: UIViewController, DayForecastViewDelegate
         image.image = UIImage(named: "windDirection")
         return image
     }()
-    
+}
 
+//MARK: - Extension: DayForecastViewDelegate
+extension DayForecastViewController: DayForecastViewDelegate {
+    
+    func updateDayForecastViewController(with model: DayWeatherDTO) {
+        self.setCity(name: model.location ?? "")
+        self.weatherImage.image = UIImage(named: model.weatherCondition ?? "")
+        self.locationLabel.text = model.location
+        self.weatherDataLabel.text = (model.temperature ?? "") + "°"
+        self.humidityLabel.text = model.humidity
+        self.rainLabel.text = model.rain
+        self.pressureLabel.text = model.pressure
+        self.windSpeedLabel.text = model.windSpeed
+        self.windDirectionLabel.text = model.windDirectionString
+    }
+    
+    func show(_ error: Error) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(okAction)
+            self.present(alert, animated: true)
+        }
+    }
+}
+
+//MARK: - Extension: UISearchBarDelegate
+extension DayForecastViewController: UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.citySearchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        self.showSearchBar()
+        
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.resignFirstResponder()
+        self.showSearchBar()
+        guard let cityName = searchBar.text else {return}
+        self.presenter?.fetchWeather(with: cityName)
+        self.hourlyForecastController?.updayteData(with: cityName)
+    }
 }

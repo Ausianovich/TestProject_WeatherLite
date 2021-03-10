@@ -9,5 +9,6 @@ import Foundation
 
 protocol HourlyWeatherPresenterProtocol {
     var delegate: HourlyForecastViewDelegate? {get set}
-    func fetchData()
+    func fetchCurrentPositionWeather()
+    func fetchWeather(with cityName: String)
 }

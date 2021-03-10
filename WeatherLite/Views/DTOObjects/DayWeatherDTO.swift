@@ -23,7 +23,7 @@ struct DayWeatherDTO {
     var windDirectionString: String {
         guard let derection = self.windDerection else {return ""}
         switch derection {
-            case "350", "360", "010": return "N"
+            case "350", "360", "010", "0": return "N"
             case "20", "30": return "N/NE"
             case "40", "50": return "NE"
             case "60", "70": return "E/NE"

@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DayForecastViewDelegate {
+protocol DayForecastViewDelegate: class {
     func updateDayForecastViewController(with: DayWeatherDTO)
     func show(_ error: Error)
 }
